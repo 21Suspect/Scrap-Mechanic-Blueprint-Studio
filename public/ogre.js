@@ -1,0 +1,14 @@
+import * as T from 'three';
+// OGRE MeshSerializer v1.8/v1.100 static triangle geometry. Chunk layout:
+// https://github.com/OGRECave/ogre/blob/v1.12.13/OgreMain/include/OgreMeshFileFormat.h
+export function parseOgre(buffer){
+ const d=new DataView(buffer);let p=0;const u8=()=>d.getUint8(p++),u16=()=>{const n=d.getUint16(p,true);p+=2;return n;},u32=()=>{const n=d.getUint32(p,true);p+=4;return n;};
+ const str=()=>{const start=p;while(p<d.byteLength&&u8()!==10){}return new TextDecoder().decode(new Uint8Array(buffer,start,p-start-1));};
+ if(u16()!==0x1000)throw Error('Unsupported OGRE endianness/header');const version=str();if(!/v1\.(8|100|41|40)/.test(version))throw Error('Unsupported OGRE version '+version);
+ const chunk=()=>{const start=p,id=u16(),length=u32();if(length<6||start+length>d.byteLength)throw Error('Invalid OGRE chunk');return {id,end:start+length};};
+ function geometry(end){const count=u32(),elements=[],buffers=new Map();while(p<end){const c=chunk();if(c.id===0x5100){while(p<c.end){const e=chunk();if(e.id===0x5110)elements.push({source:u16(),type:u16(),semantic:u16(),offset:u16(),index:u16()});p=e.end;}}
+ else if(c.id===0x5200){const bind=u16(),stride=u16(),data=chunk();if(data.id!==0x5210)throw Error('Missing OGRE vertex buffer');buffers.set(bind,{stride,start:p});}p=c.end;}
+ const g=new T.BufferGeometry();for(const e of elements){const name=e.semantic===1?'position':e.semantic===4?'normal':e.semantic===7?(e.index===0?'uv':e.index===1?'uv1':null):null;if(!name)continue;if(e.type<0||e.type>3)throw Error('Unsupported OGRE vertex encoding '+e.type);const width=e.type+1,b=buffers.get(e.source),array=new Float32Array(count*width);for(let i=0;i<count;i++)for(let j=0;j<width;j++)array[i*width+j]=d.getFloat32(b.start+i*b.stride+e.offset+j*4,true);g.setAttribute(name,new T.BufferAttribute(array,width));}return g;}
+ let shared;const subs=[];while(p<d.byteLength){const main=chunk();if(main.id!==0x3000){p=main.end;continue;}u8();while(p<d.byteLength){const c=chunk();if(c.id===0x5000)shared=geometry(c.end);else if(c.id===0x4000){const name=str(),useShared=!!u8(),count=u32(),wide=!!u8(),indices=[];for(let i=0;i<count;i++)indices.push(wide?u32():u16());let g;while(p+6<=d.byteLength&&[0x5000,0x4010,0x4100,0x4200].includes(d.getUint16(p,true))){const child=chunk();if(child.id===0x5000)g=geometry(child.end);if(child.id===0x4010&&u16()!==4)throw Error('OGRE primitive is not a triangle list');p=child.end;}subs.push({name,useShared,indices,g});}p=Math.max(p,c.end);}p=Math.max(p,main.end);}
+ const group=new T.Group();for(const s of subs){const g=(s.useShared?shared:s.g)?.clone();if(!g)throw Error('Missing OGRE geometry');g.setIndex(s.indices);if(!g.attributes.normal)g.computeVertexNormals();const m=new T.MeshBasicMaterial();m.name=s.name;const mesh=new T.Mesh(g,m);mesh.name=s.name;group.add(mesh);}return group;
+}
