@@ -42,6 +42,7 @@ export const server=http.createServer(async(req,res)=>{
  throw Error('Unknown operation');
  }
  if(req.method!=='GET')throw Error('Unsupported method');
+ if(p==='/api/status')return json({app:'Blueprint Studio',root:ROOT,pid:process.pid,version:readJSON(path.join(ROOT,'package.json')).version});
  if(p==='/api/catalog')return json({shapes:Object.fromEntries(catalog),rotations,warnings:assetWarnings,paths:PATHS});
  if(p==='/api/part-template')return json(partTemplate(url.searchParams.get('id')));
  if(p==='/api/blueprints')return json(listBlueprints());

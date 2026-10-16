@@ -16,3 +16,7 @@ Transitive dependencies have their own notices; preserve them when redistributin
 Scrap Mechanic, its scripts, meshes, textures, icons and other game content are owned by Axolot Games and other respective rights holders. They are read from the user's installed game and are not relicensed by this project's MIT license. The user-supplied preview screenshot contains rendered game content for illustration.
 
 Implementation references include the installed shape/render/rotation/Lua definitions, OGRE mesh format documentation (https://github.com/OGRECave/ogre), and blueprint joint-coordinate behavior described in Advanced Blueprint Tool V2 (https://github.com/brentbatch/Advanced-Blueprint-Tool-V2). These references are not bundled game assets or a claim of native-engine equivalence.
+
+## Windows installer
+
+The installer also redistributes the official Node.js runtime (MIT plus its third-party notices, included under `runtime/LICENSE`), npm dependencies with their package licenses, and the Playwright Chromium headless browser with its included notices. These remain under their respective licenses. The installer is built with [Inno Setup](https://jrsoftware.org/isinfo.php). No Scrap Mechanic assets are bundled.

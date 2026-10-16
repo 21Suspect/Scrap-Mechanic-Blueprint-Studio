@@ -1,6 +1,6 @@
 {
   "name": "scrap-blueprint-studio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "playwright": "1.56.1"
+    "playwright": "1.64.1"
   },
   "description": "Local Scrap Mechanic blueprint editor, native asset viewer, voxel importer and Codex creation toolkit.",
   "license": "MIT",

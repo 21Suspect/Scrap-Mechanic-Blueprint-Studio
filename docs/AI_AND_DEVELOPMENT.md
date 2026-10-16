@@ -75,4 +75,16 @@ The model-import fixtures under `tests/fixtures/model-import` are small syntheti
 
 ## Releases
 
-Only publish source, documentation and synthetic fixtures. Never include `workspace`, `captures`, `node_modules`, personal configuration, tokens, game assets or user blueprints. The release ZIP contains the source and launcher; npm installs dependencies on the destination computer. `git archive` can reproduce an archive from the tagged source. Publish a SHA-256 checksum alongside it. Tag versions only after the portable suite, available integration checks, fresh installation and package review pass.
+Source archives contain source, documentation and synthetic fixtures. The Windows installer additionally bundles licensed runtime dependencies and its capture browser. Never include `workspace`, `captures`, personal configuration, tokens, game assets or user blueprints. Optional source ZIPs exclude `node_modules`; npm installs dependencies on the destination computer. `git archive` can reproduce an archive from the tagged source. Publish a SHA-256 checksum alongside it. Tag versions only after the portable suite, available integration checks, fresh installation and package review pass.
+
+## Build the Windows installer
+
+On Windows with Inno Setup 6 and the .NET Framework C# compiler installed:
+
+```powershell
+./installer/Build-Installer.ps1 -Compiler C:/path/to/ISCC.exe
+```
+
+The script stages only source files, downloads a pinned SHA-256-verified official Node.js runtime, runs `npm ci`, bundles the Playwright headless browser, runs portable tests with the bundled runtime, compiles the desktop launcher and builds `dist/BlueprintStudio-Setup-0.2.0.exe` plus its checksum. Build downloads require internet. No private workspace, game assets or personal configuration are included. Unlike source archives, the installer intentionally includes runtime dependencies. The resulting installer is unsigned.
+
+Installed user data lives separately from application files; preserve that separation when changing the installer or uninstaller. Test clean install, desktop launch, update, bundled capture browser and uninstall with data preservation before publishing.

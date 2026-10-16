@@ -10,13 +10,13 @@ Made by [21Suspect](https://github.com/21Suspect). A local browser application f
 
 ## Easy installation
 
-1. Install [Node.js 22 or newer](https://nodejs.org/en/download) and Scrap Mechanic through Steam. Launch the game once to create your profile.
-2. Download **BlueprintStudio-v0.1.0.zip** from [Releases](https://github.com/21Suspect/Scrap-Mechanic-Blueprint-Studio/releases/latest).
-3. Extract it to a writable folder such as `Documents/BlueprintStudio`. Do not run from inside the ZIP.
-4. Double-click **Start-Blueprint-Studio.cmd**. First launch installs npm dependencies, starts the local server and opens your browser.
-5. Choose **New draft**, **Open blueprint**, or **Import 3D model**.
+1. Install Scrap Mechanic through Steam and launch it once.
+2. Download **BlueprintStudio-Setup-0.2.0.exe** from [Releases](https://github.com/21Suspect/Scrap-Mechanic-Blueprint-Studio/releases/latest), open it and click **Install**.
+3. Start **Blueprint Studio** from the desktop shortcut. Choose **New draft**, **Open blueprint**, or **Import 3D model**.
 
-Steam libraries and your blueprint profile are detected automatically, including installations on other drives. No administrator access or game-file patching is needed. See [Installation](docs/INSTALL.md) for custom paths, multiple accounts and troubleshooting.
+The installer includes Node.js, all application dependencies and the capture/import browser. No terminal, separate Node installation or administrator access is needed. Steam libraries and your blueprint profile are detected automatically.
+
+Uninstall through Windows **Settings > Apps** or the Start-menu uninstaller. Your drafts, backups, settings and game blueprints are preserved. The installer is unsigned; Windows may show a publisher/SmartScreen warning. See [Installation](docs/INSTALL.md) for details and custom paths.
 
 ## Features
 
